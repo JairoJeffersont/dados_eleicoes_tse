@@ -1,41 +1,41 @@
+from menus import menus
 import os
-from modulos import downloader
-from modulos import criar_json
 
 
-# Função genérica para baixar e descompactar arquivos
-def baixar(ano):
-    print(f'Iniciando o download dos arquivos da eleição de {ano}....')
-    downloader.download_arquivo(ano, f"https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_{ano}.zip")
-    downloader.download_arquivo(ano, f"https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_{ano}.zip")
-    downloader.download_arquivo(ano, f"https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_{ano}.zip")
+def exibir_menu(titulo, opcoes):
+    """Função para exibir o menu com opções."""
+    os.system("cls" if os.name == "nt" else "clear")
     
-# Corrigindo a função baixar_tudo
-def baixar_tudo(ultima_eleicao):
-    for ano in range(2000, ultima_eleicao + 1, 2):
-        baixar(ano)
+    
+    print("=" * 50)
+    print(f"{titulo} (Windows)")
+    print("=" * 50)
 
-# Função principal do menu
-def menu():
+    for chave, opcao in opcoes.items():
+        print(f"{chave}️⃣  {opcao[0]}")
+    
+    print("\n" + "=" * 50)
+
+def menu_principal():
+    opcoes_principais = {
+        "1": ("Fazer download dos arquivos das eleições", menus.menu_ano),
+       ##"2": ("Gerar Arquivos CSV com votos nominais", menus.menu_normalizar),
+        "6": ("Sair", None)
+    }
+    
     while True:
-        
-        print("\n--- MENU ---")
-        print("1. Baixar os arquivos de uma eleição específica")
-        print("2. Baixar os arquivos de todas as eleições")
-        print("4. Sair")
-        
-        opcao = input("Escolha uma opção: ")
+        exibir_menu("Sistema de resultados de eleições", opcoes_principais)
 
-        if opcao == "1":
-            ano = int(input("Digite o ano da eleição: "))
-            baixar(ano)
-        elif opcao == "2":
-            ultima_eleicao = int(input("Digite o ano da última eleição: "))
-            baixar_tudo(ultima_eleicao)    
-        elif opcao == "4":
-            print("Saindo... Até logo!")
-            break
+        escolha = input("👉 Digite o número correspondente: ")
+
+        if escolha in opcoes_principais:
+            if escolha == "6":
+                print("\n👋 Saindo... Até logo!\n")
+                break
+            else:
+                opcoes_principais[escolha][1]()
         else:
-            print("Opção inválida. Tente novamente.")
+            print("\n❌ Opção inválida! Tente novamente.\n")
+            input("Pressione ENTER para continuar...")
 
-menu()
+menu_principal()
